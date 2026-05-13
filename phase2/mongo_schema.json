@@ -1,0 +1,17 @@
+{
+  "user_id": 101,
+  "top_categories": [
+    {
+      "category": "Gaming",
+      "score": 20
+    },
+    {
+      "category": "Phones",
+      "score": 10
+    }
+  ],
+  "recommended_pairs": [
+    ["PS5", "Controller"],
+    ["iPhone", "AirPods"]
+  ]
+}
