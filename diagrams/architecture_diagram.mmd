@@ -10,30 +10,31 @@ graph TD
     
     subgraph Phase 1: Processing
         B(Market Basket Analysis\nMapReduce Pairs)
-        C(User Affinity Aggregation\nWeighted Scoring)
+        C(User Affinity & Recommendations\nWeighted Scoring + MBA Join)
     end
     class B,C spark
     
     subgraph Phase 2: Storage
-        D[(MongoDB\nUser Profiles)]:::mongo
+        D[(MongoDB Profile Store\nFlattened Schema + Indexes)]:::mongo
     end
     
-    subgraph Phase 3 & 4: Integration
-        E(Cart Abandonment\nSpark Filter)
-        F(Final Spark Join\nCarts + Profiles)
+    subgraph Phase 3: Integration
+        E(Cart Abandonment\nSession Filtering)
+        F(Final Spark-Mongo Join\nDecision Engine)
     end
     class E,F spark
     
-    G[Marketing Decision Engine\nHigh Discount / Std Reminder]:::output
+    G[Final Marketing Output\nPersonalized Campaigns]:::output
 
     %% Flow
     A -->|PySpark Read| B
-    A -->|PySpark Read| C
+    B -->|Product Pairs| C
+    A -->|Weighted Scoring| C
     
-    C -->|Top Categories| D
-    A -->|Raw Events| E
+    C -->|JSON Export| D
+    A -->|Abandonment Filter| E
     
-    D -->|Spark Mongo Connector| F
-    E -->|Abandoned Carts| F
+    D -->|Spark-Mongo Connector| F
+    E -->|Abandoned Cart Events| F
     
-    F -->|Joined Dataset| G
+    F -->|Targeted Recommendations| G
