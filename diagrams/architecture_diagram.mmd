@@ -1,0 +1,39 @@
+graph TD
+    %% Styling
+    classDef logs fill:#1e293b,stroke:#475569,stroke-width:2px,color:#fff
+    classDef spark fill:#f59e0b,stroke:#b45309,stroke-width:2px,color:#fff
+    classDef mongo fill:#10b981,stroke:#047857,stroke-width:2px,color:#fff
+    classDef output fill:#3b82f6,stroke:#1d4ed8,stroke-width:2px,color:#fff
+
+    %% Nodes
+    A[Raw Web Server Logs\n10GB+ CSV/JSON]:::logs
+    
+    subgraph Phase 1: Processing
+        B(Market Basket Analysis\nMapReduce Pairs)
+        C(User Affinity Aggregation\nWeighted Scoring)
+    end
+    class B,C spark
+    
+    subgraph Phase 2: Storage
+        D[(MongoDB\nUser Profiles)]:::mongo
+    end
+    
+    subgraph Phase 3 & 4: Integration
+        E(Cart Abandonment\nSpark Filter)
+        F(Final Spark Join\nCarts + Profiles)
+    end
+    class E,F spark
+    
+    G[Marketing Decision Engine\nHigh Discount / Std Reminder]:::output
+
+    %% Flow
+    A -->|PySpark Read| B
+    A -->|PySpark Read| C
+    
+    C -->|Top Categories| D
+    A -->|Raw Events| E
+    
+    D -->|Spark Mongo Connector| F
+    E -->|Abandoned Carts| F
+    
+    F -->|Joined Dataset| G

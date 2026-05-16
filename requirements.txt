@@ -1,0 +1,9 @@
+# Core Big Data Dependencies
+pyspark==4.1.1
+pymongo
+findspark
+pandas
+
+# Notebook Support
+jupyter
+ipykernel
